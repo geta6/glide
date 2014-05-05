@@ -1,0 +1,85 @@
+@import 'nib'
+
+global-reset()
+
+$color-gray-dark = #BBBBBB
+$color-gray = lighten($color-gray-dark, 10)
+
+$color-black-dark = #282130
+$color-black = lighten($color-black-dark, 10)
+
+$color-white-dark = #FEFEFE
+$color-white = lighten($color-white-dark, 10)
+
+$color-orange-dark = #D1AE3B
+$color-orange = lighten($color-orange-dark, 10)
+
+$color-purple-dark = #A188B3
+$color-purple = lighten($color-purple-dark, 10)
+
+html, body
+  font-smoothing antialiased
+  font 12px/1.7 'Helvetica Neue', HelveticaNeue, Helvetica, Sans-Serif
+  color $color-black
+
+html
+  position relative
+  min-height 100%
+
+body
+  margin-bottom 120px
+
+h1
+  font-weight bold
+  font-size 24px
+
+.container
+  margin 0 auto
+  max-width 960px
+
+.dropdown
+  position relative
+  .dropdown_menu
+    position absolute
+    top 60px
+    right 0
+    display none
+    width 200px
+    background-color rgba(0, 0, 0, .6)
+    border-radius 3px
+    &:before
+      content ''
+      position absolute
+      top -10px
+      right 12px
+      display block
+      width 0
+      border 10px solid transparent
+      border-bottom-color rgba(0, 0, 0, .6)
+      border-top-width 0
+    .dropdown_list
+      display block
+      line-height 44px
+      a
+        display block
+        padding 0 20px
+        text-align left
+        font-weight bold
+        color $color-gray
+        text-decoration none
+        transition background-color .18s cubic-bezier(0.215, 0.61, 0.355, 1)
+        &:hover
+          background-color rgba(255,255,255, .12)
+      .icon
+        padding-right 5px
+
+
+  &:hover
+    .dropdown_menu
+      display block
+
+@import 'glyphicons'
+@import 'area'
+@import 'bar'
+
+// @import 'hoge'

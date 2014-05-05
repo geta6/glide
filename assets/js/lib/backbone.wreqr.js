@@ -1,0 +1,1 @@
+../../../vendor/bower/backbone.wreqr/lib/amd/backbone.wreqr.js

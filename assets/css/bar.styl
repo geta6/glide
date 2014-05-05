@@ -1,0 +1,108 @@
+.headerbar_container, .footerbar_container
+  position relative
+
+  .tabs
+    position absolute
+
+    &[data-align=left]
+      top 0
+      left 20px
+      text-align left
+      .tab
+        margin-left 20px
+        margin-right 0
+        &:first-child
+          margin-left 0
+
+    &[data-align=right]
+      top 0
+      right 20px
+      text-align right
+      .tab
+        margin-left 0
+        margin-right 20px
+        &:last-child
+          margin-right 0
+
+    &[data-align=center]
+      position relative
+      text-align center
+
+    .tab
+      display inline-block
+      vertical-align middle
+      line-height 44px
+      color $color-gray
+      & > a
+        transition all .18s cubic-bezier(0.215, 0.61, 0.355, 1)
+        &:hover
+          color $color-gray-dark
+      .circle
+        display block
+        margin-top 8px
+        margin-bottom 8px
+        width 44px
+        height 44px
+        border-radius 22px
+        text-decoration none
+        &.circle_user
+          background-color $color-gray
+          background-size contain
+          &:hover
+            background-color $color-gray-dark
+        &.circle_logo
+          background-image url('/img/glide.svg')
+          background-size 44px 44px
+          background-color $color-orange
+          &:hover
+            background-color $color-orange-dark
+        &.circle_find
+          position relative
+          text-align left
+          background-color $color-purple
+          input
+            display block
+            apparance none
+            background transparent
+            position absolute
+            top 0
+            left 44px
+            right 0
+            bottom 0
+            border none
+            outline none
+            font-weight bold
+            font-size 12px
+            font-family inherit
+            color white
+          &.visible
+            background-color $color-purple-dark
+            width 216px
+          &:hover
+            background-color $color-purple-dark
+            width 216px
+        .icon
+          display inline-block
+          width 44px
+          text-align center
+          font-size 18px
+          color $color-white
+          &:hover
+            color $color-white
+
+.headerbar_container
+  height 60px
+
+.footerbar_container
+  position absolute
+  left 0
+  right 0
+  bottom 0
+  margin 0 auto
+  max-width 960px
+  height 120px
+
+  .tabs .tab .circle.circle_logo
+    background-color $color-gray
+    &:hover
+      background-color $color-gray-dark

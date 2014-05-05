@@ -1,0 +1,76 @@
+doctype html
+html
+  head
+    title Glide
+    link(rel='stylesheet', href='/css/app.css')
+    meta(name='viewport', content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no')
+
+  body
+    .container
+      .headerbar_container
+      .glidearea_container
+    .footerbar_container
+
+    script#template_headerbar(type='text/template')
+      ul.tabs(data-align='left')
+        li.tab: a.circle.circle_logo(href='/', data-navigate)
+
+      ul.tabs(data-align='right')
+        li.tab: a.circle.circle_find(href='javascript:void(0)')
+          .icon.search
+          input#search
+        li.tab.dropdown
+          <% if (id) { %>
+          a.circle.circle_user(href!='/<%- name %>', data-navigate, style!='background-image:url(<%- icon %>)')
+          ul.dropdown_menu
+            li.dropdown_list: a(href!='/<%- name %>', data-navigate)
+              .icon.user
+              span <%- name %>
+            li.dropdown_list: a(href='/session')
+              .icon.log_out
+              span logout
+          <% } else { %>
+          a.circle.circle_user(href='/session'): .icon.log_in
+          <% } %>
+
+    script#template_footerbar(type='text/template')
+      ul.tabs(data-align='center')
+        li.tab: a.circle.circle_logo(href='/', data-navigate)
+
+      ul.tabs(data-align='left')
+        li.tab: a &copy;2014 Glide.
+
+      ul.tabs(data-align='right')
+        li.tab: a About
+        li.tab: a Help
+
+    script#template_glides(type='text/template')
+      .glides
+      .pagers
+        .pager.pager_prev
+          .icon.left_arrow
+          span Prev
+        .pager.pager_next
+          span Next
+          .icon.right_arrow
+
+    script#template_glide(type='text/template')
+      .glide
+        .glide_shares
+          .glide_thumbs
+            .glide_thumb(style!='background-image:url(<%- thumb %>)')
+            .glide_title
+              span Marco Simoncelli
+              .glide_owner(style!='background-image:url(//geta6.net/img/geta6.svg)')
+          .glide_times: time 6 minutes ago
+          .glide_stars
+            .icon.star
+            span 312
+          .glide_views
+            .icon.eye_open
+            span 6,329
+
+    if process.env.NODE_ENV == 'production'
+      script(src='/js/app.js')
+    else
+      script(data-main='/js/config.js', src='/js/require.js')

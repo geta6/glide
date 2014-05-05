@@ -1,0 +1,14 @@
+{
+  "name": "app",
+  "dependencies": {
+    "requirejs": "~2.1.11",
+    "almond": "~0.2.9",
+    "jquery": "~2.1.0",
+    "lodash": "~2.4.1",
+    "moment": "~2.5.1",
+    "backbone": "~1.1.0",
+    "backbone.stickit": "~0.7.0",
+    "backbone-deep-model": "~0.10.4",
+    "backbone.marionette": "~1.6.2"
+  }
+}

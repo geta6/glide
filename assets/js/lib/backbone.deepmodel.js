@@ -1,0 +1,1 @@
+../../../vendor/bower/backbone-deep-model/distribution/deep-model.js

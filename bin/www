@@ -1,0 +1,121 @@
+#!/usr/bin/env node
+
+require('coffee-script/register');
+
+var fs = require('fs')
+  , path = require('path')
+  , cluster = require('cluster');
+
+while (1) {
+  if (fs.existsSync(path.resolve('package.json'))) {
+    break;
+  }
+  if (process.cwd() === '/') {
+    console.error('package.json not found.');
+    process.exit(1);
+  }
+  process.chdir('..');
+}
+
+if (!process.env.NODE_PID) {
+  throw new Error('process.env.NODE_PID undefined');
+  process.exit(1);
+}
+
+if (!process.env.NODE_ENV) {
+  console.error('process.env.NODE_ENV fallback to development');
+  process.env.NODE_ENV = 'development';
+}
+
+var pkg = require(path.resolve('package.json'))
+  , pid = path.resolve(process.env.NODE_PID);
+
+
+if (cluster.isMaster) {
+
+  var daemon = require('daemon');
+
+  if (process.env.NODE_ENV === 'production') {
+    require('daemon')();
+  }
+
+  var tmp = path.resolve('tmp')
+    , env = path.resolve('config', 'env.json')
+    , workers = {};
+
+  if (!fs.existsSync(tmp)) {
+    fs.mkdirSync(tmp);
+  }
+
+  fs.writeFileSync(pid, process.pid);
+
+  if (fs.existsSync(env)) {
+    env = require(env);
+  } else {
+    console.error('config/env.json not found.')
+    env = {}
+  }
+  process.title = pkg.name + ':master'
+
+  cluster.on('exit', function(worker){
+    delete(workers[worker.id]);
+    worker = cluster.fork(env);
+    workers[worker.id] = worker;
+  });
+
+  for (var i = 0, c = parseInt(process.env.NODE_CLUSTER, 10) || require('os').cpus().length; i < c; i++) {
+    worker = cluster.fork(env);
+    workers[worker.id] = worker;
+  }
+
+  var shutdown = function(quick) {
+    if (quick) {
+      return function(){
+        console.error('Quick shutdown.');
+        cluster.removeAllListeners('exit');
+        if (fs.existsSync(pid)) fs.unlinkSync(pid);
+        for (var id in workers) workers[id].kill('SIGTERM');
+        process.exit(0);
+      }
+    } else {
+      return function(){
+        console.error('Graceful shutdown.');
+        cluster.removeAllListeners('exit');
+        cluster.disconnect(function(){
+          for (var id in workers) workers[id].kill('SIGQUIT');
+            if (fs.existsSync(pid)) fs.unlinkSync(pid);
+          process.exit(0);
+        });
+      }
+    }
+  };
+
+  process.on('SIGINT', shutdown(true));
+  process.on('SIGTERM', shutdown(true));
+  process.on('SIGQUIT', shutdown(false));
+  process.on('SIGWINCH', function(){
+    console.error('Restart all workers.');
+    var i = 0;
+    for (var id in workers) {
+      (function(worker){
+        setTimeout(function(){
+          worker.kill('SIGTERM');
+        }, 1000 * i++);
+      }(workers[id]));
+    }
+  });
+
+} else {
+
+  console.log('cluster.worker.id: ' + cluster.worker.id);
+
+  process.title = pkg.name + ':worker:' + cluster.worker.id;
+
+  var app = require(path.resolve('config', 'app'));
+  app.set('port', process.env.PORT || 3000);
+
+  var server = app.listen(app.get('port'), function() {
+    console.log('Listening on port ' + server.address().port);
+  });
+
+}
